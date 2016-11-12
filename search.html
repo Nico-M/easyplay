@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <title>Search</title>
+    <style>
+    * {
+        margin: 0;
+        padding: 0;
+    }
+
+    input {
+        border: none;
+    }
+
+    ul,
+    ul li {
+        list-style: none;
+    }
+
+    .fl {
+        float: left;
+    }
+
+    .fr {
+        float: right;
+    }
+
+    .clearfix:before,
+    .clearfix:after {
+        display: table;
+        content: '';
+    }
+
+    .clearfix:after {
+        clear: both;
+    }
+
+    html {
+        font-size: 100px;
+    }
+
+    body {
+        font-size: 0.12rem;
+    }
+
+    section {
+        width: 80%;
+        margin: 0 auto;
+        padding-top: 0.1rem;
+    }
+
+    input[type=text] {
+        width: 70%;
+        height: 0.30rem;
+        text-indent: 0.1rem;
+        border: 1px solid #848383;
+        border-radius: 4px;
+        box-shadow: 0 0 4px 1px #dd1864;
+    }
+
+    input[type=submit] {
+        width: 28%;
+        height: 0.30rem;
+        background: #dd1864;
+        color: white;
+        border-radius: 4px;
+    }
+
+    .list ul li {
+        padding: 0.1rem;
+        border: 1px solid #C0C0C0;
+        border-radius: 0.08rem;
+        box-shadow: 0 0 4px 2px #C0C0C0;
+        margin-bottom: 0.1rem;
+    }
+
+    .list ul li span {
+        font-size: 0.14rem;
+        color: #FF0000;
+    }
+
+    .list dl {
+        display: flex;
+        align-items: flex-start;
+    }
+
+    .list dl dt {
+
+        border: 1px solid #A0A0A0;
+        margin-right: 5%;
+        box-shadow: 0 0 4px #000;
+        width: 25%;
+        height: 0.695rem;
+    }
+
+    .list dl dt img {
+        display: block;
+        width: 100%;
+        height: 0.695rem;
+    }
+
+    .list dl dd {
+        width: 68%;
+        /*min-height: 0.94rem;*/
+    }
+
+    .jump {
+        display: block;
+    }
+
+    .title {
+        max-height: 0.4rem;
+        color: #4FB34B;
+        overflow: hidden;
+        line-height: 0.2rem;
+    }
+
+    .title span,
+    .link span {
+        display: inline-block;
+        max-width: 70%;
+        vertical-align: top;
+    }
+
+    .link {
+        color: #4FB34B;
+        max-height: 0.36rem;
+    }
+
+    .song {
+        /*padding-top: 0.2rem;*/
+    }
+
+    .song a {
+        display: inline-block;
+        width: 0.3rem;
+        height: 0.2rem;
+        text-decoration: none;
+        color: #3C37C7;
+        vertical-align: middle;
+    }
+
+    audio {
+        position: absolute;
+        right: 0;
+        top: 0;
+        display: none;
+    }
+
+    button {
+        /* position: fixed;
+    left:0;
+    top:0.2rem;*/
+        width: 0.2rem;
+        height: 0.2rem;
+        background: url(play.png) no-repeat;
+        background-size: cover;
+        vertical-align: -3px;
+    }
+    </style>
+    <script src="http://cdn.bootcss.com/jquery/1.12.4/jquery.js"></script>
+    <script type="text/javascript">
+    $(function() {
+
+    })
+    </script>
+</head>
+
+<body>
+    <section class="clearfix">
+        <input type="text" class="fl">
+        <input type="submit" value="search" class="fr">
+    </section>
+    <section class="list">
+        <ul>
+            <li class="list">
+                <dl class="clearfix">
+                    <dt class="images"><img src="2016-11-07_200543.png" alt=""></dt>
+                    <dd class="">
+                        <div class="title">曲名:<span>绅士</span> </div>
+                        <div class="link">
+                            歌手: <span>薛之谦</span>
+                        </div>
+                        <div class="song">
+                            <a href="" class='jump '>链接</a>
+                            <button type=""></button>
+                        </div>
+                    </dd>
+                </dl>
+            </li>
+        </ul>
+
+    </section>
+    <audio src="" controls="controls" preload id="audio1"></audio>
+    <audio src="" controls="controls" preload id="audio2"></audio>
+    <audio src="" controls="controls" preload id="audio3"></audio>
+    <audio src="" controls="controls" preload id="audio4"></audio>
+    <audio src="" controls="controls" preload id="audio5"></audio>
+    <audio src="" controls="controls" preload id="audio6"></audio>
+    <audio src="" controls="controls" preload id="audio7"></audio>
+    <script type="text/javascript">
+    // var addr = "http://other.web.rf01.sycdn.kuwo.cn/resource/n2/90/69/448372049.mp3";
+
+    var onOff = true;
+    $('input:submit').on('click', function() {
+        $('.list ul').html('')
+        var keyword = $('input:text').val();
+        //请求豆瓣数据
+        $.ajax({
+            type: 'get',
+            url: 'https://api.douban.com/v2/music/search',
+            data: {
+                q: keyword
+            },
+
+            dataType: "jsonp",
+            jsonCallback: '?',
+            jsonp: 'callback',
+            success: function(data) {
+                var mydata = data.musics;
+                console.log(mydata);
+                //注意要先设置,叠加
+                var str = '';
+                $.each(mydata, function(index, value) {
+                    str += '<li>\
+                <dl class="clearfix">\
+                    <dt class="images"><img src=' + this.image + ' alt=""></dt>\
+                    <dd class="">\
+                        <div class="title">曲名:<span>' + this.title + '</span> </div>\
+                        <div class="link">\
+                            歌手: <span>' + ('author' in this && this.author[0].name ? this.author[0].name : '未知') + '</span>\
+                        </div>\
+                        <div class="song">\
+                            <a href=' + this.alt + ' class="jump">链接</a>\
+                            <button type="" ></button>\
+                        </div>\
+                    </dd>\
+                </dl>\
+            </li>';
+                    // console.log(str)
+
+
+                });
+                // console.log(str)
+                // 加载到界面
+                $('.list ul').append($(str));
+                $('button').click(function() {
+                    console.log($('button').length);
+                    var self = $(this)
+                        // console.log(888)
+                    if (onOff) {
+                        var key = $(this).parent().siblings('.title').find('span').text();
+                        //获取酷我id
+                        $.ajax({
+                            type: 'get',
+                            url: 'http://search.kuwo.cn/r.s',
+                            data: {
+                                all: key,
+                                ft: 'music',
+                                encoding: 'utf8',
+                                rformat: 'json'
+                                    // itemset: 'web_2013'
+                            },
+                            dataType: 'jsonp',
+                            jsonCallback: 'searchMusicResult',
+                            success: function(data) {
+                                var path = data.abslist[0].WEBMP3Q0_PATH;
+                                var id = data.abslist[0].MUSICRID;
+                                console.log(id.match(/(\d+)/)[1])
+                                    // console.log(id)
+                                    $('audio')[0].pause();
+                                var url1 = 'http://other.web.ra01.sycdn.kuwo.cn/resource/' + path;
+                                var url2 = 'http://other.web.rb01.sycdn.kuwo.cn/resource/' + path;
+                                var url3 = 'http://other.web.rd01.sycdn.kuwo.cn/resource/' + path;
+                                var url4 = 'http://other.web.re01.sycdn.kuwo.cn/resource/' + path;
+                                var url5 = 'http://other.web.rh01.sycdn.kuwo.cn/resource/' + path;
+                                 var url6 = 'http://other.web.rf01.sycdn.kuwo.cn/resource/' + path;
+                                 var url7 = 'http://other.web.rc01.sycdn.kuwo.cn/resource/' + path;
+                                console.log(url1)
+
+
+
+                                $('#audio1').attr("src", url1);
+                                $('#audio2').attr("src", url2);
+                                $('#audio3').attr("src", url3);
+                                $('#audio4').attr("src", url4);
+                                $('#audio5').attr("src", url5);
+                                $('#audio6').attr("src", url6);
+                                $('#audio7').attr("src", url7);
+                                $('#audio1')[0].play();
+                                $('#audio2')[0].play();
+                                $('#audio3')[0].play();
+                                $('#audio4')[0].play();
+                                $('#audio5')[0].play();
+                                $('#audio6')[0].play();
+                                $('#audio7')[0].play();
+
+                                self.css('backgroundImage', 'url(pause.png)')
+                                onOff = false;
+
+
+
+
+                            },
+                            error: function(status) {
+                                console.log(999)
+                            }
+                        });
+
+
+
+                    } else {
+                        self.css('backgroundImage', 'url(play.png)')
+                        $('#audio1')[0].pause();
+                        $('#audio2')[0].pause();
+                        $('#audio3')[0].pause();
+                        $('#audio4')[0].pause();
+                        $('#audio5')[0].pause();
+                        $('#audio6')[0].pause();
+                        $('#audio7')[0].pause();
+                        onOff = true;
+                    }
+
+                    // console.log(key)
+                })
+            }
+        })
+
+    });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+   <script src="http://cdn.bootcss.com/jquery/1.12.4/jquery.js"></script>
+   <script type="text/javascript">
+     $.ajax({
+      type:'get',
+      url:'http://search.kuwo.cn/r.s',
+      data:{
+        all:'薛之谦',
+        ft:'music',
+        encoding:'utf8',
+        rformat:'json',
+        itemset:'web_2013'
+      },
+      dataType:'jsonp',
+      async:'false',
+      
+      jsonCallback:'searchMusicResult',
+      success:function(data){
+        console.log(data);
+      },
+      error:function(status){
+        console.log(999)
+      }
+     })
+   </script>
+</head>
+<body>
+  
+</body>
+</html>
